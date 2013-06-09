@@ -1,0 +1,14 @@
+parameters:
+    database_driver: pdo_pgsql
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: website
+    database_user: website
+    database_password: website
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    locale: en
+    secret: 51fa5a9677817dbec6771887bb31e780b3ab64bc
+    database_path: null
