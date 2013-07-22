@@ -102,7 +102,7 @@ class DatabaseDriver implements MappingDriver
         }
     }
 
-    private function reverseEngineerMappingFromDatabase()
+private function reverseEngineerMappingFromDatabase()
     {
         if ($this->tables !== null) {
             return;
@@ -128,15 +128,12 @@ class DatabaseDriver implements MappingDriver
                 $allForeignKeyColumns = array_merge($allForeignKeyColumns, $foreignKey->getLocalColumns());
             }
 
-            if ( ! $table->hasPrimaryKey()) {
-                throw new MappingException(
-                    "Table " . $table->getName() . " has no primary key. Doctrine does not ".
-                    "support reverse engineering from tables that don't have a primary key."
-                );
+            $pkColumns=array();
+            if ($table->hasPrimaryKey()) {
+                $pkColumns = $table->getPrimaryKey()->getColumns();
+                sort($pkColumns);
             }
 
-            $pkColumns = $table->getPrimaryKey()->getColumns();
-            sort($pkColumns);
             sort($allForeignKeyColumns);
 
             if ($pkColumns == $allForeignKeyColumns && count($foreignKeys) == 2) {
@@ -150,6 +147,7 @@ class DatabaseDriver implements MappingDriver
             }
         }
     }
+
 
     /**
      * {@inheritDoc}
@@ -170,8 +168,8 @@ class DatabaseDriver implements MappingDriver
         $columns = $this->tables[$tableName]->getColumns();
         $indexes = $this->tables[$tableName]->getIndexes();
         try {
-            $primaryKeyColumns = $this->tables[$tableName]->getPrimaryKey()->getColumns();
-        } catch(SchemaException $e) {
+            $primaryKeyColumns = ($this->tables[$tableName]->hasPrimaryKey())?$this->tables[$tableName]->getPrimaryKey()->getColumns():array();
+            } catch(SchemaException $e) {
             $primaryKeyColumns = array();
         }
 

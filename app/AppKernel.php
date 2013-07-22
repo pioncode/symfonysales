@@ -16,6 +16,12 @@ class AppKernel extends Kernel
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new Sonata\BlockBundle\SonataBlockBundle(),
+            new Sonata\jQueryBundle\SonatajQueryBundle(),
+            new Sonata\AdminBundle\SonataAdminBundle(),
+            new TheParticleBridge\WebsiteBundle\TheParticleBridgeWebsiteBundle(),
+            new Pion\SalesBundle\PionSalesBundle(),
+            new Pion\WebBundle\PionWebBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

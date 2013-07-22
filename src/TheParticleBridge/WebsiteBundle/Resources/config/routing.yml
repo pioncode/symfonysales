@@ -1,0 +1,3 @@
+the_particle_bridge_website_homepage:
+    pattern:  /{name}
+    defaults: { _controller: TheParticleBridgeWebsiteBundle:Default:index }

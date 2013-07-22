@@ -1,0 +1,7 @@
+parameters:
+#    the_particle_bridge_website.example.class: TheParticleBridge\WebsiteBundle\Example
+
+services:
+#    the_particle_bridge_website.example:
+#        class: %the_particle_bridge_website.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

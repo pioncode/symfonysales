@@ -1,0 +1,7 @@
+parameters:
+#    pion_sales.example.class: Pion\SalesBundle\Example
+
+services:
+#    pion_sales.example:
+#        class: %pion_sales.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

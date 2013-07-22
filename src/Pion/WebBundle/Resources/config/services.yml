@@ -1,0 +1,7 @@
+parameters:
+#    pion_web.example.class: Pion\WebBundle\Example
+
+services:
+#    pion_web.example:
+#        class: %pion_web.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
