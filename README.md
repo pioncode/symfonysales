@@ -1,0 +1,4 @@
+symfonysales
+============
+
+Symfony sales database
