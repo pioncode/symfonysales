@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Pion\SalesBundle\Entity\Transaction" table="transaction">
+    <id name="invnum" type="integer" column="invnum">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="client" type="smallint" column="client" nullable="true"/>
+    <field name="ordnum" type="string" column="ordnum" length="60" nullable="true"/>
+    <field name="currency" type="integer" column="currency" nullable="true"/>
+    <field name="stand" type="string" column="stand" nullable="true"/>
+    <field name="invdate" type="date" column="invdate" nullable="true"/>
+    <field name="paydate" type="date" column="paydate" nullable="true"/>
+    <field name="refund" type="decimal" column="refund" nullable="true"/>
+    <field name="balance" type="decimal" column="balance" nullable="true"/>
+    <field name="payflag" type="integer" column="payflag" nullable="true"/>
+    <field name="cheqnum" type="string" column="cheqnum" length="30" nullable="true"/>
+    <field name="inamount" type="decimal" column="inamount" nullable="true"/>
+    <field name="tmpamt" type="decimal" column="tmpamt" nullable="true"/>
+    <field name="tmpdate" type="date" column="tmpdate" nullable="true"/>
+    <field name="gross" type="decimal" column="gross" nullable="false"/>
+    <field name="nettotal" type="decimal" column="nettotal" nullable="false"/>
+    <field name="discount" type="float" column="discount" nullable="true"/>
+    <field name="prod1" type="string" column="prod1" length="7" nullable="true"/>
+    <field name="prod2" type="string" column="prod2" length="7" nullable="true"/>
+    <field name="prod3" type="string" column="prod3" length="7" nullable="true"/>
+    <field name="prod4" type="string" column="prod4" length="7" nullable="true"/>
+    <field name="prod5" type="string" column="prod5" length="7" nullable="true"/>
+    <field name="prod6" type="string" column="prod6" length="7" nullable="true"/>
+    <field name="tdesc1" type="string" column="tdesc1" length="50" nullable="true"/>
+    <field name="tdesc2" type="string" column="tdesc2" length="50" nullable="true"/>
+    <field name="tdesc3" type="string" column="tdesc3" length="50" nullable="true"/>
+    <field name="tdesc4" type="string" column="tdesc4" length="50" nullable="true"/>
+    <field name="tdesc5" type="string" column="tdesc5" length="50" nullable="true"/>
+    <field name="tdesc6" type="string" column="tdesc6" length="50" nullable="true"/>
+    <field name="quant1" type="integer" column="quant1" nullable="true"/>
+    <field name="quant2" type="integer" column="quant2" nullable="true"/>
+    <field name="quant3" type="integer" column="quant3" nullable="true"/>
+    <field name="quant4" type="integer" column="quant4" nullable="true"/>
+    <field name="quant5" type="integer" column="quant5" nullable="true"/>
+    <field name="quant6" type="integer" column="quant6" nullable="true"/>
+    <field name="val1" type="decimal" column="val1" nullable="true"/>
+    <field name="val2" type="decimal" column="val2" nullable="true"/>
+    <field name="val3" type="decimal" column="val3" nullable="true"/>
+    <field name="val4" type="decimal" column="val4" nullable="true"/>
+    <field name="val5" type="decimal" column="val5" nullable="true"/>
+    <field name="val6" type="decimal" column="val6" nullable="true"/>
+    <field name="comm" type="string" column="comm" length="80" nullable="true"/>
+    <field name="comment1" type="string" column="comment1" length="80" nullable="true"/>
+    <field name="coma2" type="string" column="coma2" length="80" nullable="true"/>
+    <field name="comb3" type="string" column="comb3" length="80" nullable="true"/>
+  </entity>
+</doctrine-mapping>

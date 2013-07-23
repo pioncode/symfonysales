@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Pion\SalesBundle\Entity\Product" table="product">
+    <id name="pCode" type="string" column="p_code" length="7">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="pTemp" type="string" column="p_temp" length="80" nullable="true"/>
+    <field name="pDesc" type="string" column="p_desc" length="30" nullable="true"/>
+    <field name="pSterl" type="decimal" column="p_sterl" nullable="true"/>
+    <field name="pDollar" type="decimal" column="p_dollar" nullable="true"/>
+    <field name="lProd" type="string" column="l_prod" length="7" nullable="true"/>
+    <field name="jdisc" type="decimal" column="jdisc" nullable="true"/>
+    <field name="spriceA" type="decimal" column="sprice_a" nullable="true"/>
+    <field name="spriceB" type="decimal" column="sprice_b" nullable="true"/>
+    <field name="spriceC" type="decimal" column="sprice_c" nullable="true"/>
+    <field name="spriceD" type="decimal" column="sprice_d" nullable="true"/>
+    <field name="dpriceA" type="decimal" column="dprice_a" nullable="true"/>
+    <field name="dpriceB" type="decimal" column="dprice_b" nullable="true"/>
+    <field name="dpriceC" type="decimal" column="dprice_c" nullable="true"/>
+    <field name="dpriceD" type="decimal" column="dprice_d" nullable="true"/>
+  </entity>
+</doctrine-mapping>

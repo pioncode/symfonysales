@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Pion\SalesBundle\Entity\Marketing" table="marketing">
+    <field name="subsYear" type="smallint" column="subs_year" nullable="false"/>
+    <field name="prod" type="string" column="prod" length="50" nullable="false"/>
+    <field name="client" type="smallint" column="client" nullable="false"/>
+    <field name="country" type="string" column="country" length="50" nullable="false"/>
+    <field name="ccode" type="smallint" column="ccode" nullable="false"/>
+    <field name="name" type="string" column="name" length="50" nullable="false"/>
+    <field name="addr1" type="string" column="addr1" length="50" nullable="true"/>
+    <field name="key" type="integer" column="key" nullable="false"/>
+  </entity>
+</doctrine-mapping>
