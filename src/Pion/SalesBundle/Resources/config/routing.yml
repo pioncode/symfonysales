@@ -1,3 +1,7 @@
 pion_sales_homepage:
     pattern:  /hello/{name}
     defaults: { _controller: PionSalesBundle:Default:index }
+pion_sales_forms:
+    resource: "@PionSalesBundle/Controller/"
+    type:     annotation
+#    prefix:   tra

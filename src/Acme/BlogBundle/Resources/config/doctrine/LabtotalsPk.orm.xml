@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="LabtotalsPk" table="labtotals_pk">
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="journal" type="string" column="journal" nullable="false"/>
+    <field name="volume" type="smallint" column="volume" nullable="false"/>
+    <field name="issue" type="smallint" column="issue" nullable="false"/>
+    <field name="zone" type="smallint" column="zone" nullable="true"/>
+    <field name="total" type="smallint" column="total" nullable="true"/>
+  </entity>
+</doctrine-mapping>

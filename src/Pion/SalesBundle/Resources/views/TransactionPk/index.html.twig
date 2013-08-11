@@ -1,0 +1,56 @@
+{% extends '::base.html.twig' %}
+{#
+Javascript and CSS files load in ::base.html.twig located in app Resources views
+1) Javascript and CSS defined from here
+2) php app/console assets:install web to link to bundle
+3) Files locted in PionSales/Resources/public
+#}
+
+{% block body -%}
+
+    <h1>{{title}}</h1>
+    <h2>Total Records: {{total}} Showing {{start}} to {{start + range}}</h2>
+
+    <table class="records_list">
+        <thead>
+            {#{dump(display)}#}
+                <div id="grid_array"></div>
+            <tr> {% for item in display %}
+                
+                <th>{{item}}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            
+        {% for entity in entities %}
+            {% for key, result in entity[0]%}
+              <td>{{ result}}</td>
+            {% endfor%}
+
+
+                <td>
+                <ul>
+                    <li>                        
+                        <a href="{{ path(tp_paths.show, { 'id': entity[0].id }) }}">show</a>
+                    </li>
+                    <li>
+                        <a href="{{ path(tp_paths.edit, { 'id': entity[0].id }) }}">edit</a>
+                    </li>
+                </ul>
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+        <ul>
+        <li>
+            <a href="{{ path(tp_paths.create) }}">
+                Create a new entry
+            </a>
+        </li>
+    </ul>
+    {% endblock %}

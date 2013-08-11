@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Sonata\AdminBundle\Admin\BaseFieldDescription;
 
 /**
  * Add all dependencies to the Admin class, this avoid to write too many lines
@@ -140,7 +141,7 @@ class AddDependencyCallsCompilerPass implements CompilerPassInterface
         );
 
         foreach ($keys as $key) {
-            $method = 'set'.$this->camelize($key);
+            $method = 'set' . BaseFieldDescription::camelize($key);
             if (!isset($attributes[$key]) || $definition->hasMethodCall($method)) {
                 continue;
             }
@@ -188,7 +189,7 @@ class AddDependencyCallsCompilerPass implements CompilerPassInterface
         $definition->addMethodCall('setManagerType', array($manager_type));
 
         foreach ($defaultAddServices as $attr => $addServiceId) {
-            $method = 'set'.$this->camelize($attr);
+            $method = 'set' . BaseFieldDescription::camelize($attr);
 
             if (isset($addServices[$attr]) || !$definition->hasMethodCall($method)) {
                 $definition->addMethodCall($method, array(new Reference(isset($addServices[$attr]) ? $addServices[$attr] : $addServiceId)));
@@ -264,29 +265,19 @@ class AddDependencyCallsCompilerPass implements CompilerPassInterface
             'edit'                     => 'SonataAdminBundle:CRUD:edit.html.twig',
             'history'                  => 'SonataAdminBundle:CRUD:history.html.twig',
             'history_revision'         => 'SonataAdminBundle:CRUD:history_revision.html.twig',
+            'acl'                      => 'SonataAdminBundle:CRUD:acl.html.twig',
             'action'                   => 'SonataAdminBundle:CRUD:action.html.twig',
             'short_object_description' => 'SonataAdminBundle:Helper:short-object-description.html.twig',
             'preview'                  => 'SonataAdminBundle:CRUD:preview.html.twig',
             'list_block'               => 'SonataAdminBundle:Block:block_admin_list.html.twig',
             'delete'                   => 'SonataAdminBundle:CRUD:delete.html.twig',
             'batch'                    => 'SonataAdminBundle:CRUD:list__batch.html.twig',
+            'select'                   => 'SonataAdminBundle:CRUD:list__select.html.twig',
             'batch_confirmation'       => 'SonataAdminBundle:CRUD:batch_confirmation.html.twig',
             'inner_list_row'           => 'SonataAdminBundle:CRUD:list_inner_row.html.twig',
             'base_list_field'          => 'SonataAdminBundle:CRUD:base_list_field.html.twig',
         ), $definedTemplates);
 
         $definition->addMethodCall('setTemplates', array($definedTemplates));
-    }
-
-    /**
-     * method taken from PropertyPath
-     *
-     * @param  $property
-     *
-     * @return mixed
-     */
-    protected function camelize($property)
-    {
-        return preg_replace(array('/(^|_)+(.)/e', '/\.(.)/e'), array("strtoupper('\\2')", "'_'.strtoupper('\\1')"), $property);
     }
 }

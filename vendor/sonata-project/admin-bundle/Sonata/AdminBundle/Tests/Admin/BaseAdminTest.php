@@ -22,6 +22,15 @@ class FooTest_Admin
     }
 }
 
+class FooTestNullToString_Admin
+{
+    // In case __toString returns an attribute not yet set
+    public function __toString()
+    {
+        return null;
+    }
+}
+
 class PostAdmin extends Admin
 {
     protected $metadataClass = null;
@@ -218,7 +227,22 @@ class BaseAdminTest extends \PHPUnit_Framework_TestCase
 
         $s = new FooTest_Admin;
         $this->assertEquals('salut', $admin->toString($s));
+        
+        // To string method is implemented, but returns null
+        $s = new FooTestNullToString_Admin;
+        $this->assertNotEmpty($admin->toString($s));
 
         $this->assertEquals("", $admin->toString(false));
+    }
+    
+    public function testIsAclEnabled()
+    {
+        $postAdmin = new PostAdmin('sonata.post.admin.post', 'NewsBundle\Entity\Post', 'SonataNewsBundle:PostAdmin');
+
+        $this->assertFalse($postAdmin->isAclEnabled());
+
+        $commentAdmin = new CommentAdmin('sonata.post.admin.comment', 'Application\Sonata\NewsBundle\Entity\Comment', 'SonataNewsBundle:CommentAdmin');
+        $commentAdmin->setSecurityHandler($this->getMock('Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface'));
+        $this->assertTrue($commentAdmin->isAclEnabled());
     }
 }

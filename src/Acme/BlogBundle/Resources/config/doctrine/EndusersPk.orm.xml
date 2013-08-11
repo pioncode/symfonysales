@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="EndusersPk" table="endusers_pk">
+    <id name="id" type="integer" column="id">
+      <generator strategy="SEQUENCE"/>
+    </id>
+    <field name="agentRef" type="string" column="agent_ref" length="50" nullable="false"/>
+    <field name="clientRefno" type="integer" column="client_refno" nullable="true"/>
+    <field name="name" type="string" column="name" length="100" nullable="true"/>
+    <field name="address1" type="string" column="address1" length="100" nullable="true"/>
+    <field name="address2" type="string" column="address2" length="100" nullable="true"/>
+    <field name="address3" type="string" column="address3" length="100" nullable="true"/>
+    <field name="address4" type="string" column="address4" length="100" nullable="true"/>
+    <field name="country" type="string" column="country" length="50" nullable="true"/>
+  </entity>
+</doctrine-mapping>
