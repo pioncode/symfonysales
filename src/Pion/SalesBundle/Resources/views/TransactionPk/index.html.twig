@@ -8,49 +8,59 @@ Javascript and CSS files load in ::base.html.twig located in app Resources views
 
 {% block body -%}
 
+{% block javascript %}
+
+<script >
+$(function(){
+    $.ajax({
+    type:"GET",
+    url: "http://localhost:8888/~website/Symfony/web/app_dev.php/sales/transaction/ajax/index/",
+    dataType:"json",
+    success: function(data)
+     {
+
+      var datamatrix = [];
+      var coltype =    [];
+      for(var c in data[0][0]) coltype.push({title:c,width:100,dataType:typeof(data[0][0][c])});
+
+      var i=0;
+      for(var loop in data){
+       var datanew = [];
+       for(var d in data[i][0]) {datanew.push(data[i][0][d]);}
+      datamatrix.push(datanew);
+      i++;
+      }
+      
+      var obj = {};
+      obj.dataType = "JSON",
+      obj.width = 1200;
+      obj.height = 500;
+      obj.dataModel = {data:datamatrix};
+      obj.colModel = coltype;
+      $("#grid_array").pqGrid( obj ); 
+     }
+    });
+
+});    
+
+</script>
+
+{%endblock%}
+
     <h1>{{title}}</h1>
     <h2>Total Records: {{total}} Showing {{start}} to {{start + range}}</h2>
-
-    <table class="records_list">
-        <thead>
-            {#{dump(display)}#}
-                <div id="grid_array"></div>
-            <tr> {% for item in display %}
-                
-                <th>{{item}}</th>
-                {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            
-        {% for entity in entities %}
-            {% for key, result in entity[0]%}
-              <td>{{ result}}</td>
-            {% endfor%}
+     <div id="grid_array"></div>
 
 
-                <td>
-                <ul>
-                    <li>                        
+     {#
+                       
                         <a href="{{ path(tp_paths.show, { 'id': entity[0].id }) }}">show</a>
                     </li>
                     <li>
                         <a href="{{ path(tp_paths.edit, { 'id': entity[0].id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
 
-            </tr>
-
-        {% endfor %}
-        </tbody>
-    </table>
-
-        <ul>
-        <li>
             <a href="{{ path(tp_paths.create) }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+
+     #}
+
+{% endblock %}

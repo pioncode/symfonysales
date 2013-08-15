@@ -20,12 +20,21 @@ class TransactionPk
     /**
      * @var integer
      *
-     * @ORM\Column(name="invnum", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="transaction_pk_invnum_seq", allocationSize=1, initialValue=1)
+     * @ORM\SequenceGenerator(sequenceName="transaction_pk_id_seq", allocationSize=1, initialValue=1)
      */
     private $id;
+    
+     /**
+     * @var integer
+     *
+     * @ORM\Column(name="invnum", type="integer", nullable=false)
+     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\SequenceGenerator(sequenceName="transaction_pk_pkey", allocationSize=1, initialValue=1)
+     */
+    private $invnum;
 
     /**
      * @var integer
@@ -348,11 +357,29 @@ class TransactionPk
     }
 
     /**
-     * Set client
+     * Set invnum
      *
      * @param integer $client
      * @return TransactionPk
      */
+    
+        public function setInvnum($invnum)
+    {
+        $this->invnum = $invnum;
+    
+        return $this;
+    }
+
+    /**
+     * Get invnum
+     *
+     * @return integer 
+     */
+    public function getInvnum ()
+    {
+        return $this->invnum;
+    }
+    
     public function setClient($client)
     {
         $this->client = $client;

@@ -11,11 +11,20 @@
     </head>
     <body>
 
-        {% javascripts 
+        {% javascripts
           'bundles/pionsales/grid/t*.js'
-          'bundles/pionsales/grid/p*.js'
+          'bundles/pionsales/grid/pqgrid.dev.js'
 
         %}
+        
+        <script>
+            var TWIG = {};
+{#            
+            TWIG.data   = {{path(tp_paths.ajax_index,{'start': start } )}};
+#}
+
+        </script>
+
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script> 
         <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script> 
         <script type="text/javascript" src="{{ asset_url }}"></script>

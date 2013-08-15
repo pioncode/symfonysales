@@ -7,14 +7,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Pion\SalesBundle\Entity\TransactionPk;
+use Symfony\Component\HttpFoundation\Response;
+
 use Pion\SalesBundle\Form\TransactionPkType;
+use Pion\SalesBundle\Entity\TransactionPk;
+
 
 
 
 /**
  * TransactionPk controller.
- *
+ * 
  * @Route("/transaction")
  */
 class TransactionPkController extends Controller
@@ -25,14 +28,15 @@ class TransactionPkController extends Controller
         //Sheet title
         'title'        => 'Transaction',
         //D/SQL
-        'manager'      => 'pionsales',
+        'manager'      => 'pionsales',        
         'orderby'      => 'id',
-        'direction'    => 'desc',
+        'direction'    => 'asc',
         'query'        => 'PionSalesBundle:TransactionPk',
         //Template
         'show'         => 'transaction_show', 
         'edit'         => 'transaction_edit',
         'create'       => 'transaction_new',
+        'ajax_index'   => 'transaction_ajax_index',
         'range'        => 10 //Range of records to return
         );
     
@@ -44,8 +48,6 @@ class TransactionPkController extends Controller
          //     findAll causes a timeout or a memoey issue
          //This method will scan over objects and return them as needed.
           $entities = $em->createQuery('SELECT p FROM '.$sql_data['query'].' p ORDER BY p.'.$sql_data['orderby'].' '.$sql_data['direction']);
-          $entities_count    = $em->createQuery('SELECT COUNT(p) FROM '.$sql_data['query'].' p');
-          $total = $entities_count->getSingleScalarResult();
           $iterableResult = $entities->iterate(array(),\Doctrine\ORM\Query::HYDRATE_ARRAY);
           $ent_group=NULL;
 
@@ -67,9 +69,35 @@ class TransactionPkController extends Controller
           }
         //echo var_dump($ent_group[0][0]);
       return array(
-          'total' => $total,
           'ent_group' => $ent_group
           );
+    }
+
+    private function getSqlCount($sql_data)
+    {
+
+        $em = $this->getDoctrine()->getManager($sql_data['manager']);
+
+         //     findAll causes a timeout or a memoey issue
+         //This method will scan over objects and return them as needed.
+          $entities_count    = $em->createQuery('SELECT COUNT(p) FROM '.$sql_data['query'].' p');
+          $total = $entities_count->getSingleScalarResult();
+      return $total;
+    }
+  
+     /**
+     * AJAX Lists all TransactionPk entities.
+     * @Route("/ajax/index/", name="transaction_ajax_index")
+     * Route("/ajax/index/", name="transaction_ajax_index", defaults={"_format": "json"})
+     * @Method("GET")
+     */
+    public function ajaxAction($start=0)
+    {
+        $param=$this->default_param;
+        $sql_results=$this->getSqlResults($start,$param);
+
+        $return=json_encode($sql_results['ent_group']);//jscon encode the array
+        return new Response($return,200,array('Content-Type'=>'application/json'));//make sure it has the correct content type
     }
     
      /**
@@ -82,16 +110,17 @@ class TransactionPkController extends Controller
     public function indexAction($start=0)
     {
         $param=$this->default_param;
-        $sql_results=$this->getSqlResults($start,$param);//die;
+        $sql_results=$this->getSqlResults($start,$param);
         return array(
             'entities'      => $sql_results['ent_group'],
             'display'       => array_keys($sql_results['ent_group'][0][0]),
             'title'         => $param['title'],
             'tp_paths'      => $param,
-            'total'         => $sql_results['total'],
+            'total'         => $this->getSqlCount($param),
             'start'         => $start,
             'range'         => $param['range']
         );
+        
     }
     
     
