@@ -14,7 +14,7 @@ Javascript and CSS files load in ::base.html.twig located in app Resources views
 $(function(){
     $.ajax({
     type:"GET",
-    url: "http://localhost:8888/~website/Symfony/web/app_dev.php/sales/transaction/ajax/index/",
+    url: "http://localhost:8888/~website/Symfony/web/app_dev.php/sales/transaction/ajax/index/10",
     dataType:"json",
     success: function(data)
      {
@@ -33,10 +33,11 @@ $(function(){
       
       var obj = {};
       obj.dataType = "JSON",
-      obj.width = 1200;
+      obj.width =  800;
       obj.height = 500;
       obj.dataModel = {data:datamatrix};
       obj.colModel = coltype;
+      obj.resizable = "TRUE";
       $("#grid_array").pqGrid( obj ); 
      }
     });

@@ -84,11 +84,11 @@ class TransactionPkController extends Controller
           $total = $entities_count->getSingleScalarResult();
       return $total;
     }
-  
+      
      /**
      * AJAX Lists all TransactionPk entities.
      * @Route("/ajax/index/", name="transaction_ajax_index")
-     * Route("/ajax/index/", name="transaction_ajax_index", defaults={"_format": "json"})
+     * Route("/ajax/index/{start}", name="transaction_ajax_index", defaults={"_format": "json"})
      * @Method("GET")
      */
     public function ajaxAction($start=0)
