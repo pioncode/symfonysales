@@ -11,57 +11,110 @@ Javascript and CSS files load in ::base.html.twig located in app Resources views
 {% block javascript %}
 
 <script >
-$(function(){
+/*
+ * 
+ * Grid Java Script
+ */ 
+var obj = {};
+    obj.dataType   = "JSON";
+    obj.width      =  800;
+    obj.flexHeight = "TRUE";
+    obj.resizable  = "TRUE";
+    obj.url        ="http://localhost:8888/~website/Symfony/web/app_dev.php/sales/transaction/ajax/index/";
+    obj.dataModel  = {
+                      sorting: "remote",
+                      location: "remote",
+                      paging: "remote",
+                      sortIndx: 0,
+                      sortDir: "up",
+                      filterIndx: 0,
+                      filterValue: "",
+                      getUrl: function () {
+                       var sortDir = (this.sortDir === "up") ? "asc" : "desc";
+                       var query_page    = "cur_page="  + this.curPage + "&records_per_page=" +  this.rPP;
+                       var query_sort    = "&sortBy="   + obj.colModel[this.sortIndx].title   + "&dir=" + sortDir;
+                       var queryString   = query_page + query_sort;
+                       return { url:"http://localhost:8888/~website/Symfony/web/app_dev.php/sales/transaction/ajax/index/",
+                                data: queryString
+                              };
+                      },
+                      getData: function (dataJSON) {
+                       var datamatrix = [];
+                       var i=0;
+                       for(var loop in dataJSON["ent_group"]){
+                        var datanew = [];
+                        for(var d in dataJSON["ent_group"][i]) {datanew.push(dataJSON["ent_group"][i][d]);}
+                        datamatrix.push(datanew);
+                        i++;
+                        }
+                       return { curPage: dataJSON['page'], totalRecords: dataJSON['total_records'] , data: datamatrix };    
+                       }
+                     };
+    obj.render = function (evt, obj) {
+        var $toolbar = $("<div class='pq-grid-toolbar pq-grid-toolbar-search'></div>").appendTo($(".pq-grid-top", this));
+ 
+        $("<span>Filter</span>").appendTo($toolbar);
+ 
+        $("<input type='text' class='pq-filter-txt'/>").appendTo($toolbar).keyup(function (evt) {
+            if (evt.keyCode === 13) {this.getUrl();}
+        });
+        var pulldown="<select id='pq-filter-select-column'>";
+
+        for (var i = 0; i < obj.colModel.length; i++) {
+         pulldown += "<option value='"+i+"'>"+obj.colModel[i].title+"</option>";
+
+        };
+        pulldown += "</select>";
+
+        $(pulldown).appendTo($toolbar).change(function () {
+            alert(evt);
+        });
+        $("<span class='pq-separator'></span>").appendTo($toolbar);
+ 
+    };
+    
+    
+  function makegrid()
+    {
+     $("#grid_array").pqGrid(obj);   
+    };
+  function pqFilter(){
+      
+     var txt = $("input.pq-filter-txt").val().toUpperCase(),
+     colIndx = $("select#pq-filter-select-column").val(),
+     DM = $grid.pqGrid("option", "dataModel");
+     DM.filterIndx = colIndx;
+     DM.filterValue = txt;
+     $grid.pqGrid("refreshDataAndView");
+  }
+    
+$(document).ready(function(){
+        
+    /*
+     * Set up the column header default values. No call back function for this
+     * in pqGrid so using an $.ajax call
+    */
     $.ajax({
     type:"GET",
-    url: "http://localhost:8888/~website/Symfony/web/app_dev.php/sales/transaction/ajax/index/10",
-    dataType:"json",
+    url: obj.url,
+    dataType: obj.dataType,
     success: function(data)
      {
-
-      var datamatrix = [];
       var coltype =    [];
-      for(var c in data[0][0]) coltype.push({title:c,width:100,dataType:typeof(data[0][0][c])});
-
-      var i=0;
-      for(var loop in data){
-       var datanew = [];
-       for(var d in data[i][0]) {datanew.push(data[i][0][d]);}
-      datamatrix.push(datanew);
-      i++;
-      }
-      
-      var obj = {};
-      obj.dataType = "JSON",
-      obj.width =  800;
-      obj.height = 500;
-      obj.dataModel = {data:datamatrix};
+      for(var c in data['ent_group'][0]) coltype.push({title:c,width:100,dataType:typeof(data['ent_group'][0][c])});
       obj.colModel = coltype;
-      obj.resizable = "TRUE";
-      $("#grid_array").pqGrid( obj ); 
+      makegrid();
      }
     });
-
 });    
+
 
 </script>
 
 {%endblock%}
 
     <h1>{{title}}</h1>
-    <h2>Total Records: {{total}} Showing {{start}} to {{start + range}}</h2>
      <div id="grid_array"></div>
 
-
-     {#
-                       
-                        <a href="{{ path(tp_paths.show, { 'id': entity[0].id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path(tp_paths.edit, { 'id': entity[0].id }) }}">edit</a>
-
-            <a href="{{ path(tp_paths.create) }}">
-
-     #}
 
 {% endblock %}

@@ -2,12 +2,16 @@
 
 namespace Pion\SalesBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Session\Session;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Response;
+
+
 
 use Pion\SalesBundle\Form\TransactionPkType;
 use Pion\SalesBundle\Entity\TransactionPk;
@@ -17,12 +21,15 @@ use Pion\SalesBundle\Entity\TransactionPk;
 
 /**
  * TransactionPk controller.
+ * AJAX Calls added for Jquerya
+ * Total records stored in session cookie after first count to avoid recounting 
+ * them each time an ajax call is made
  * 
  * @Route("/transaction")
  */
 class TransactionPkController extends Controller
 {
-
+ 
     private $default_param = array 
         (
         //Sheet title
@@ -37,90 +44,108 @@ class TransactionPkController extends Controller
         'edit'         => 'transaction_edit',
         'create'       => 'transaction_new',
         'ajax_index'   => 'transaction_ajax_index',
-        'range'        => 10 //Range of records to return
+        'range'        => 10 //Default range of records to return
         );
+
     
-    private function getSqlResults($start,$sql_data)
+    private function getSqlResults($page,$param)
     {
+        $em = $this->getDoctrine()->getManager($param['manager']);
+        /*
+        * Only Call getTotal once 
+        */
+       $this->session = $this->getRequest()->getSession();
+       $total_records=$this->session->get('my_total_records',-1);
+       if ($total_records == -1){$total_records = $this->getSqlCount($param);};
+          
+       /*
+        * Make sure we do not go over the max/min records
+        */
+       if ($total_records <= ($page-1)*$param["range"]){$page=intval($total_records/$param["range"]);};
+       if ($page < 1){$page == 1;};
+          
+       /*
+        * Make Query
+        */
+       $entities = $em->createQuery('SELECT p FROM '.$param['query'].' p ORDER BY p.'.$param['orderby'].' '.$param['direction']);
+       $entities->setMaxResults($param['range']);
+       $entities->setFirstResult( ($page -1 )*$param['range'] );  
+       $iterableResult = $entities->getArrayResult();
 
-        $em = $this->getDoctrine()->getManager($sql_data['manager']);
-
-         //     findAll causes a timeout or a memoey issue
-         //This method will scan over objects and return them as needed.
-          $entities = $em->createQuery('SELECT p FROM '.$sql_data['query'].' p ORDER BY p.'.$sql_data['orderby'].' '.$sql_data['direction']);
-          $iterableResult = $entities->iterate(array(),\Doctrine\ORM\Query::HYDRATE_ARRAY);
-          $ent_group=NULL;
-
-          $i=0;
-
-          while (($row = $iterableResult->next()) !== false) 
-          {
-           $i++;
-           if($i >= $start){$ent_group[]=$row;}
-
-           //echo var_dump($ent_group);
-           //$user = $row[0]->fetchOne(array(), Doctrine_Core::HYDRATE_ARRAY);
-           //echo var_dump(get_class_vars("Pion\SalesBundle\Entity\TransactionPk"));
-           //\Doctrine\Common\Util\Debug::dump($row);
-           
-           //Detach this result from Doctrine
-
-           if($i===$sql_data['range']+$start){$em->clear();break;}
-          }
-        //echo var_dump($ent_group[0][0]);
+ 
+          
       return array(
-          'ent_group' => $ent_group
-          );
+          'ent_group'      => $iterableResult,
+          'page'           => $page,
+          'total_records'  => $total_records
+      );
     }
 
-    private function getSqlCount($sql_data)
+    private function getSqlCount($param)
     {
+        
+        $em = $this->getDoctrine()->getManager($param['manager']);
 
-        $em = $this->getDoctrine()->getManager($sql_data['manager']);
-
-         //     findAll causes a timeout or a memoey issue
-         //This method will scan over objects and return them as needed.
-          $entities_count    = $em->createQuery('SELECT COUNT(p) FROM '.$sql_data['query'].' p');
-          $total = $entities_count->getSingleScalarResult();
-      return $total;
+        /*
+         *      findAll causes a timeout or a memoey issue
+         *      This method will scan over objects and return them as needed.
+        */
+        
+        $entities_count    = $em->createQuery('SELECT COUNT(p) FROM '.$param['query'].' p');
+        $total = $entities_count->getSingleScalarResult();
+   
+        /*
+         * Set total records so we do not need to run this in the future
+        */
+        $this->session = $this->getRequest()->getSession();
+        $this->session->set('my_total_records', $total);      
+        return $total;
     }
       
      /**
      * AJAX Lists all TransactionPk entities.
      * @Route("/ajax/index/", name="transaction_ajax_index")
-     * Route("/ajax/index/{start}", name="transaction_ajax_index", defaults={"_format": "json"})
      * @Method("GET")
      */
-    public function ajaxAction($start=0)
+    public function ajaxAction()
     {
-        $param=$this->default_param;
-        $sql_results=$this->getSqlResults($start,$param);
+        $param       = $this->default_param;
+        $request     = $this->getRequest();
+        /*
+         * Page number and records
+         */
+        $page        = $request->query->get('cur_page'); // get $page parameter
+        $records     = $request->query->get('records_per_page'); // get $page parameter
+        if(empty($page)){$page=1;};
+        if(!empty($records)){$param['range']=$records;};
 
-        $return=json_encode($sql_results['ent_group']);//jscon encode the array
+        /*
+         * Sorting
+         */
+        $sortBy      = $request->query->get('sortBy');
+        $direction   = $request->query->get('dir');
+        if(!empty($sortBy)){$param['orderby']=$sortBy;};
+        if(!empty($sortBy)){$param['direction']=$direction;};
+ 
+
+        $sql_results = $this->getSqlResults($page,$param);
+        $return=json_encode($sql_results);//jscon encode the array
         return new Response($return,200,array('Content-Type'=>'application/json'));//make sure it has the correct content type
     }
     
      /**
      * Lists all TransactionPk entities.
      *
-     * @Route("/{start}", name="transaction")
+     * @Route("/", name="transaction")
      * @Method("GET")
      * @Template()
      */
-    public function indexAction($start=0)
+    public function indexAction()
     {
         $param=$this->default_param;
-        $sql_results=$this->getSqlResults($start,$param);
         return array(
-            'entities'      => $sql_results['ent_group'],
-            'display'       => array_keys($sql_results['ent_group'][0][0]),
             'title'         => $param['title'],
-            'tp_paths'      => $param,
-            'total'         => $this->getSqlCount($param),
-            'start'         => $start,
-            'range'         => $param['range']
-        );
-        
+         );        
     }
     
     
